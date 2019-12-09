@@ -1,10 +1,8 @@
 <!-- Footer -->
-<footer class="page-footer font-small blue bg-secondary">
+<footer class="page-footer font-small blue bg-secondary fixed-bottom">
 
     <!-- Copyright -->
-    <div class="footer-copyright text-center py-3">© 2018 Copyright:
-      <a href="https://mdbootstrap.com/education/bootstrap/"> MDBootstrap.com</a>
-    </div>
+    <div class="footer-copyright text-center py-3">© 2019 Copyright: Rama -- Aay    </div>
     <!-- Copyright -->
   
   </footer>

@@ -12,3 +12,5 @@
 */
 
 Route::get('/', 'ScrapController@index');
+Route::get('/chart', 'ScrapController@chart');
+Route::get('/chart/select', 'ScrapController@select');

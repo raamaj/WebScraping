@@ -1,17 +1,17 @@
 @extends('layouts.master')
 @section('content')
-    <h2>Trading Dulu Gan</h2>
+    <h2>Informasi 10 Mata Uang Kripto Terpopuler</h2>
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Symbol</th>
-                <th>Price (USD)</th>
+                <th>Nama</th>
+                <th>Simbol</th>
+                <th>Harga (IDR)</th>
                 <th>Market Cap</th>
-                <th>Volume (24H)</th>
-                <th>Change (24H)</th>
-                <th>Change (7D)</th>
-                <th>Time</th>
+                <th>Vol. (24 Jam)</th>
+                <th>Total Vol.</th>
+                <th>Prb. (24 Jam)</th>
+                <th>Prb. (7 Hari)</th>
             </tr>
         </thead>
         <tbody>
@@ -19,12 +19,12 @@
             <tr>
                 <td>{{$items['name']}}</td>
                 <td>{{$items['symbol']}}</td>
-                <td>${{$items['price']}}</td>
-                <td>${{$items['marcap']}}B</td>
-                <td>${{$items['vol24h']}}B</td>
+                <td>{{$items['price']}}</td>
+                <td>Rp. {{$items['marcap']}}T</td>
+                <td>Rp. {{$items['vol24h']}}T</td>
+                <td>{{$items['voltot']}}</td>
                 <td>{{$items['chg24h']}}</td>
                 <td>{{$items['chg7d']}}</td>
-                <td>{{$items['date']}}</td>
             </tr>
             @endforeach
         </tbody>

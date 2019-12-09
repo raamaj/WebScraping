@@ -5,15 +5,19 @@ namespace App\Http\Controllers;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Sunra\PhpSimple\HtmlDomParser;
+use App\ScrapModel;
 
 class ScrapController extends Controller
 {
     var $data = array();
+    
     public function getData($cc){
+        $date = new \DateTime();
+        $date->setTimezone(new \DateTimeZone('Asia/Jakarta'));
         $patt = array();
         $patt[0]='/&#x/';
         $patt[1]='/;/';
-        $patt[2]='/B/';
+        $patt[2]='/T/';
         $rep = array();
         $rep[0]='';
         $rep[1]='';
@@ -21,9 +25,10 @@ class ScrapController extends Controller
         foreach($cc as $val){
             $name = $val->find('td[class="left bold elp name cryptoName first js-currency-name"]',0)->text();
             $symbol = $val->find('td[class="left noWrap elp symb js-currency-symbol"]',0)->text();
-            $price = str_replace(',','',$val->find('td[class="price js-currency-price"]',0)->text());
+            $price = str_replace('','',$val->find('td[class="price js-currency-price"]',0)->text());
             $marcap = preg_replace($patt,$rep,$val->find('td[class="js-market-cap"]',0)->text());
             $vol24 = preg_replace($patt,$rep,$val->find('td[class="js-24h-volume"]',0)->text());
+            $volTot = $val->find('td[class="js-total-vol"]',0)->text();
             $chg24h = $val->find('td[class="js-currency-change-24h"]',0)->text();
             $chg7d = $val->find('td[class="js-currency-change-7d"]',0)->text();
             $data2 =  [
@@ -32,16 +37,17 @@ class ScrapController extends Controller
                 'price' => $price,
                 'marcap' => $marcap,
                 'vol24h' => $vol24,
+                'voltot' => $volTot,
                 'chg24h' => $chg24h,
                 'chg7d' => $chg7d,
-                'date' => date("Y-m-d h:i:sa")
+                'created' => $date->format('Y-m-d H:i:s')
             ];
             $this->data[] = $data2;
         }
     }
 
     public function index(){
-        $url = 'https://www.investing.com/crypto/';
+        $url = 'https://id.investing.com/crypto/';
         $client = new Client();
 
         $response = $client->request(
@@ -81,11 +87,25 @@ class ScrapController extends Controller
             $datas = $this->data;
             //dd($datas);
             //dd(date("Y-m-d h:i:sa"));
+            //$this->insert($datas);
             return view('scrap.index', compact('datas'));
         }else{
             echo '404 not found';
         }
     }
 
+    public function insert($data){
+        ScrapModel::insert($data);
+    }
+
+    public function chart(){
+        return view('scrap.chart');
+    }
+
+    public function select(){
+        $cc = $_GET['jenis'];
+        $crypto = ScrapModel::where('symbol', $cc)->orderBy('created', 'asc')->take(10)->get();
+        return \Response::json($crypto);
+    }
     
 }
